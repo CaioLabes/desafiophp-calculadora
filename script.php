@@ -38,25 +38,9 @@ class Calculadora {
         }
     }
 }
+
 // Verificação submit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificação botão salvar
-    if (isset($_POST['salvar'])) {
-        // Salva na sessão
-        $_SESSION['num1'] = $_POST['num1'];
-        $_SESSION['num2'] = $_POST['num2'];
-        $_SESSION['op'] = $_POST['op'];
-    }
-    // Verificação botão pegar
-    if (isset($_POST['pegar'])) {
-        // Verificação se os valores estão na sessão
-        if (isset($_SESSION['num1']) && isset($_SESSION['num2']) && isset($_SESSION['op'])) {
-            // Coloca os valores armazenados de volta para o formulário
-            $_POST['num1'] = $_SESSION['num1'];
-            $_POST['num2'] = $_SESSION['num2'];
-            $_POST['op'] = $_SESSION['op'];
-        }
-    }
     // Verificação botão de limpar histórico
     if (isset($_POST['limpar'])) {
         // Limpa o histórico armazenado na sessão
@@ -77,8 +61,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //cálculo
             $result = $calculadora->calcular($num1, $num2, $op);
 
-            // Adicionar calculo no histórico
+            // Adicionar cálculo no histórico
             $_SESSION['historico'][] = "$num1 $op $num2 = $result";
+            
+            // Salva os valores no formulário
+            $_SESSION['num1'] = $num1;
+            $_SESSION['num2'] = $num2;
+            $_SESSION['op'] = $op;
+        }
+    }
+    // Verificação botão de M
+    if (isset($_POST['salvar_pegar'])) {
+        // Se os valores estão na sessão, coloca-os de volta nos campos do formulário
+        if (isset($_SESSION['num1']) && isset($_SESSION['num2']) && isset($_SESSION['op'])) {
+            $_POST['num1'] = $_SESSION['num1'];
+            $_POST['num2'] = $_SESSION['num2'];
+            $_POST['op'] = $_SESSION['op'];
+        } else {
+            // Se não estiverem na sessão, salva os valores do formulário na sessão
+            $_SESSION['num1'] = $_POST['num1'];
+            $_SESSION['num2'] = $_POST['num2'];
+            $_SESSION['op'] = $_POST['op'];
         }
     }
 }
